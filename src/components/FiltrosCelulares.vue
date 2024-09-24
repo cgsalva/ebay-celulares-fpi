@@ -42,6 +42,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import { db } from '../firebase/configuracion.js'
+import { collection, getDocs } from 'firebase/firestore/lite';
 
 const modelPrecio = ref([''])
 
