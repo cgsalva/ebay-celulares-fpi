@@ -1,46 +1,53 @@
 <template>
-  <div class="q-pa-md" style="width: 400px">
-    <q-list bordered separator>
+  <div class="q-pa-md">
+    <q-expansion-item
+        expand-separator
+        icon="filter_alt"
+        label="Filter by"
+      >
+    <q-list separator>
+      <!--
       <q-item v-ripple>
         <q-item-section>
-          <q-item-label>Filtros</q-item-label>
+          <q-item-label class="text-h6 q-mt-sm q-mb-xs">Filter by</q-item-label>
         </q-item-section>
       </q-item>
+    -->
       <q-item clickable v-ripple>
         <!-- para las options esta todo en filtros por lo que solo hay que llamar al array indicado
          en firebase se puede ver su nombre -->
         <q-item-section>
-          <q-select v-model="modelPrecio" :options="precios" label="Precio" />
+          <q-select v-model="modelPrecio" :options="precios" label="Precio" borderless />
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple>
         <q-item-section>
-          <q-select v-model="modelMarca" :options="filtros.marcas" label="Marcas" />
+          <q-select v-model="modelMarca" :options="filtros.marcas" label="Marcas" borderless />
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple>
         <q-item-section>
-          <q-select v-model="modelPantalla" :options="precios" label="Tamaño de pantalla" />
+          <q-select v-model="modelPantalla" :options="precios" label="Tamaño de pantalla" borderless />
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple>
         <q-item-section>
-          <q-select v-model="modelSO" :options="filtros.sistemaOperativo" label="Sistema Operativo" />
+          <q-select v-model="modelSO" :options="filtros.sistemaOperativo" label="Sistema Operativo" borderless />
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple>
         <q-item-section>
-          <q-select v-model="modelColor" :options="marcas" label="Color" />
+          <q-select v-model="modelColor" :options="marcas" label="Color" borderless />
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple>
         <q-item-section>
-          <q-select v-model="modelAlmacenamiento" :options="marcas" label="Almacenamiento Interno" />
+          <q-select v-model="modelAlmacenamiento" :options="marcas" label="Almacenamiento Interno" borderless />
         </q-item-section>
       </q-item>
     </q-list>
+  </q-expansion-item>
   </div>
-  <p>{{  filtros }}</p>
 </template>
 
 <script setup>
