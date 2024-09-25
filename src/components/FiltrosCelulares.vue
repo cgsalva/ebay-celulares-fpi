@@ -64,15 +64,11 @@ const modelAlmacenamiento = ref([''])
 
 const precios = ref(['$0.00 - $99.99', '$100 - $199.99', '$200 - Superior'])
 
-onMounted(
+onMounted(//esta dentro de onMounted para que se ejecute cuando se monte el componente
   async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'filtros'));
-      const filtrosArray = [];
-
-      querySnapshot.forEach((doc) => {
-        filtrosArray.push(doc.data());
-      });
+      const filtrosArray = querySnapshot.docs.map(doc => doc.data());
 
       filtros.value = filtrosArray[0]; // Asigna los datos a la variable reactiva
       /* Se indica la posición 0 ya que devuleve un array donde cada posicion es un documento (object{})
