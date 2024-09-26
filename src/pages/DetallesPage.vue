@@ -3,12 +3,26 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12 col-sm-7">
-          <q-img
-            class="q-ma-sm"
-            name="img2"
-            size="600px"
-            src="https://cdn.quasar.dev/img/parallax2.jpg"
-          />
+          <div class="q-pa-md">
+            <q-carousel animated v-model="slide" arrows navigation infinite>
+              <q-carousel-slide
+                :name="1"
+                img-src="https://cdn.quasar.dev/img/mountains.jpg"
+              />
+              <q-carousel-slide
+                :name="2"
+                img-src="https://cdn.quasar.dev/img/parallax1.jpg"
+              />
+              <q-carousel-slide
+                :name="3"
+                img-src="https://cdn.quasar.dev/img/parallax2.jpg"
+              />
+              <q-carousel-slide
+                :name="4"
+                img-src="https://cdn.quasar.dev/img/quasar.jpg"
+              />
+            </q-carousel>
+          </div>
         </div>
         <div class="col-12 col-sm-5">
           <q-card class="my-card q-ma-sm" flat bordered style="width: auto">
@@ -74,10 +88,14 @@
           <div class="text-h5 q-ml-lg">Articulos similares</div>
         </div>
       </div>
-      <div class="row">
-        <div class="col">
+      <div class="row flex-center">
+        <div class="col-12 col-sm-6 col-md-3">
           <CardCelular />
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
           <CardCelular />
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
           <CardCelular />
         </div>
       </div>
@@ -96,7 +114,10 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import CardCelular from "../components/CardCelular.vue";
+
+const slide = ref(1);
 defineOptions({
   name: "DetallesPage",
 });
