@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="background-gradient">
     <div class="col-12">
       <div class="row">
         <div class="col-12 col-sm -7">
@@ -95,43 +95,17 @@
           <div class="text-h5 q-ml-lg">Articulos similares</div>
         </div>
       </div>
-      <q-carousel
-        v-model="slide"
-        transition-prev="slide-right"
-        transition-next="slide-left"
-        swipeable
-        animated
-        control-color="amber"
-        navigation
-        padding
-        arrows
-        height="300px"
-        class="shadow-3 rounded-borders"
-      >
-        <q-carousel-slide :name="1" class="column no-wrap">
-          <div class="row">
-            <div class="col-12 col-sm-6 col-md-4">
-              <CardCelular />
-            </div>
-            <div class="col-12 col-sm-6 col-md-4">
-              <CardCelular />
-            </div>
-            <div class="col-12 col-sm-6 col-md-4">
-              <CardCelular />
-            </div>
-          </div>
-        </q-carousel-slide>
-        <q-carousel-slide :name="2" class="column no-wrap">
-          <div class="row">
-            <div class="col-12 col-sm-6 col-md-4">
-              <CardCelular />
-            </div>
-            <div class="col-12 col-sm-6 col-md-4">
-              <CardCelular />
-            </div>
-          </div>
-        </q-carousel-slide>
-      </q-carousel>
+      <div class="row">
+        <div class="col">
+          <CardCelular />
+        </div>
+        <div class="col">
+          <CardCelular />
+        </div>
+        <div class="col">
+          <CardCelular />
+        </div>
+      </div>
       <div class="row">
         <div class="col-12">
           <div class="text-h5 q-ml-lg">los clientes tambien compraron</div>
@@ -151,6 +125,7 @@ import { ref } from "vue";
 import CardCelular from "../components/CardCelular.vue";
 
 const slide = ref(1);
+
 defineOptions({
   name: "DetallesPage",
 });
