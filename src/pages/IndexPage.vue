@@ -10,10 +10,10 @@
           <FiltrosCelulares />
         </div>
       </div>
-      <div class="col-12 col-md-9 justify-content-center">
-        <CardCelular />
-        <CardCelular />
-        <CardCelular />
+      <div class="col-12 col-sm-9">
+        <CardCelular title="Samsung Galaxy A15" price="149.99" imageUrl="https://m.media-amazon.com/images/I/61cl1NEIrdL.jpg" />
+        <CardCelular title="Honor X5" price="80" imageUrl="https://citycellmx.com/wp-content/uploads/2024/03/HONOR-X5.png" />
+        <CardCelular title="Samsung Galaxy A25" price="240" imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" />
       </div>
     </div>
   </q-page>
