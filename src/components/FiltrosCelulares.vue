@@ -4,7 +4,7 @@
       <!-- para las options esta todo en filtros por lo que solo hay que llamar al array indicado
        en firebase se puede ver su nombre -->
       <q-item-section>
-        <q-select v-model="modelPrecio" :options="precios" label="Precio" borderless />
+        <q-select v-model="modelPrecio" :options="filtros.precios" label="Precio" borderless />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
@@ -14,7 +14,7 @@
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelPantalla" :options="precios" label="Tamaño de pantalla" borderless />
+        <q-select v-model="modelPantalla" :options="filtros.pantalla" label="Tamaño de pantalla" borderless />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
@@ -24,12 +24,12 @@
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelColor" :options="marcas" label="Color" borderless />
+        <q-select v-model="modelColor" :options="filtros.colores" label="Color" borderless />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelAlmacenamiento" :options="marcas" label="Almacenamiento Interno" borderless />
+        <q-select v-model="modelAlmacenamiento" :options="filtros.almacenamiento" label="Almacenamiento Interno" borderless />
       </q-item-section>
     </q-item>
   </q-list>
