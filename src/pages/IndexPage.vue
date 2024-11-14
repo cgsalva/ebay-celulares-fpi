@@ -11,41 +11,42 @@
         </div>
       </div>
       <div class="col-12 col-sm-9">
-        <CardCelular :title="celulares.modelo" :price="celulares.precio" :imageUrl="celulares.imagenesURL.frontal" />
-        <CardCelular title="Honor X5" price="80" imageUrl="https://citycellmx.com/wp-content/uploads/2024/03/HONOR-X5.png" />
-        <CardCelular title="Samsung Galaxy A25" price="240" imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" />
+        <!-- Renderizar la lista de celulares -->
+        <CardCelular v-for="(celular, index) in celulares" :key="index" :title="celular.modelo" :price="celular.precio"
+          :imageUrl="celular.imagenesURL.frontal" />
+        <!-- Celulares de ejemplo adicionales -->
+        <CardCelular title="Honor X5" price="80"
+          imageUrl="https://citycellmx.com/wp-content/uploads/2024/03/HONOR-X5.png" />
+        <CardCelular title="Samsung Galaxy A25" price="240"
+          imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" />
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup>
-
-import FiltrosCelulares from '../components/FiltrosCelulares.vue'
-import CardCelular from '../components/CardCelular.vue'
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { collection, getDocs } from 'firebase/firestore/lite';
-import { db } from 'src/boot/firebase';
+import { db } from 'src/boot/firebase'; // Asegúrate de que la ruta sea correcta
+import FiltrosCelulares from '../components/FiltrosCelulares.vue';
+import CardCelular from '../components/CardCelular.vue';
 
-defineOptions({
-  name: 'IndexPage'
-});
+const celulares = ref([]); // Declaración de la variable reactiva
 
-const celulares = ref([]); // Variable reactiva para almacenar los datos de los celulares
-
-onMounted(//esta dentro de onMounted para que se ejecute cuando se monte el componente
-  async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'celulares'));
-      const celularesArray = querySnapshot.docs.map(doc => doc.data());
-
-      celulares.value = celularesArray[1]; // Asigna los datos a la variable reactiva
-      console.log('Celulares:', celulares.value);
-      console.log('Celulares:', celulares.value.imagenesURL.frontal);
-    } catch (error) {
-      console.error('Error al obtener los celulares:', error);
+const fetchCelulares = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'celulares'));
+    if (!querySnapshot.empty) {
+      celulares.value = querySnapshot.docs.map(doc => doc.data());
+    } else {
+      console.warn('No se encontraron celulares en la base de datos.');
     }
+    console.log('Celulares obtenidos:', celulares.value);
+  } catch (error) {
+    console.error('Error al obtener los celulares:', error);
   }
-)
+};
 
+// Llamada a la función al montar el componente
+onMounted(fetchCelulares);
 </script>
