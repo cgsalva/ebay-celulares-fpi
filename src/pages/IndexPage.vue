@@ -10,15 +10,24 @@
           <FiltrosCelulares />
         </div>
       </div>
+
       <div class="col-12 col-sm-9">
         <!-- Renderizar la lista de celulares -->
-        <CardCelular v-for="(celular, index) in celulares" :key="index" :title="celular.modelo" :price="celular.precio"
-          :imageUrl="celular.imagenesURL.frontal" />
+        <CardCelular 
+          v-for="(celular, index) in celulares" 
+          :key="index"
+          :marca="celular.marca"
+          :modelo="celular.modelo"
+          :precio="celular.precio"
+          :imageUrl="celular.imagenesURL.frontal" 
+        />
         <!-- Celulares de ejemplo adicionales -->
-        <!-- <CardCelular title="Honor X5" price="80"
+        <!--
+        <CardCelular marca="HONOR" modelo="X5" precio="80"
           imageUrl="https://citycellmx.com/wp-content/uploads/2024/03/HONOR-X5.png" />
-        <CardCelular title="Samsung Galaxy A25" price="240"
-          imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" /> -->
+        <CardCelular marca="Samsung" modelo="Galaxy A25" precio="240"
+          imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" />
+        -->
       </div>
     </div>
   </q-page>
