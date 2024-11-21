@@ -1,6 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
+//import { VueFire } from "vuefire";
+
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -17,7 +21,19 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const provider = new GoogleAuthProvider();
 
-export { db };
+/* export default ({ app }) => {
+  app.use(VueFire, {
+    // imported above but could also just be created here
+    firebaseApp,
+    modules: [
+
+    ],
+  })
+} */
+
+export { provider, auth, db };

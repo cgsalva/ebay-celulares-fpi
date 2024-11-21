@@ -10,7 +10,7 @@
       </q-card-section>
 
       <q-card-actions class="q-mb-sm">
-        <q-btn rounded color="primary" to="detalle" label="Ver más" class="q-mx-lg" style="width: 100%;" />
+        <q-btn rounded color="primary" to="detalle" label="Ver más" class="q-mx-lg" style="width: 100%;" />z
       </q-card-actions>
     </q-card>
   </div>

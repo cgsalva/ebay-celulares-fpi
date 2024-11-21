@@ -47,12 +47,26 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn round flat>
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-            </q-avatar>
-            <q-tooltip>Account</q-tooltip>
-          </q-btn>
+          <q-btn v-if="mostrar == true" @click="loginGoogle" color="primary" label="Iniciar Sesión" class="q-mx-md" />
+          <q-btn-dropdown v-if="mostrar == false" round flat>
+            <template v-slot:label>
+              <q-avatar size="26px">
+                <img :src="user.photoURL">
+              </q-avatar>
+            </template>
+
+            <q-list>
+              <q-item>
+                <q-item-section>
+                  <q-item-label>{{ user.displayName }}</q-item-label>
+                  <q-item-label caption>{{ user.email }}</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-btn @click="cerrarSesion" color="secondary" label="Cerrar Sesión" />
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
         </div>
       </q-toolbar>
     </q-header>
@@ -63,93 +77,60 @@
   </q-layout>
 </template>
 
-<script>
-import { ref } from 'vue'
-import { fabYoutube } from '@quasar/extras/fontawesome-v6'
+<script setup>
+import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import { auth, provider } from 'src/boot/firebase';
+import { onMounted, ref } from 'vue';
 
-export default {
-  name: 'MyLayout',
+const user = ref([])
+const mostrar = ref(true)
 
-  setup() {
-    const leftDrawerOpen = ref(false)
-    const search = ref('')
 
-    function toggleLeftDrawer() {
-      leftDrawerOpen.value = !leftDrawerOpen.value
-    }
 
-    return {
-      fabYoutube,
+const loginGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    user.value = result.user;
+    console.log('Usuario:', JSON.stringify(user.value));
 
-      leftDrawerOpen,
-      search,
-
-      toggleLeftDrawer,
-
-      links1: [
-        { icon: 'home', text: 'Home' },
-        { icon: 'whatshot', text: 'Trending' },
-        { icon: 'subscriptions', text: 'Subscriptions' }
-      ],
-      links2: [
-        { icon: 'folder', text: 'Library' },
-        { icon: 'restore', text: 'History' },
-        { icon: 'watch_later', text: 'Watch later' },
-        { icon: 'thumb_up_alt', text: 'Liked videos' }
-      ],
-      links3: [
-        { icon: fabYoutube, text: 'YouTube Premium' },
-        { icon: 'local_movies', text: 'Movies & Shows' },
-        { icon: 'videogame_asset', text: 'Gaming' },
-        { icon: 'live_tv', text: 'Live' }
-      ],
-      links4: [
-        { icon: 'settings', text: 'Settings' },
-        { icon: 'flag', text: 'Report history' },
-        { icon: 'help', text: 'Help' },
-        { icon: 'feedback', text: 'Send feedback' }
-      ],
-      buttons1: [
-        { text: 'About' },
-        { text: 'Press' },
-        { text: 'Copyright' },
-        { text: 'Contact us' },
-        { text: 'Creators' },
-        { text: 'Advertise' },
-        { text: 'Developers' }
-      ],
-      buttons2: [
-        { text: 'Terms' },
-        { text: 'Privacy' },
-        { text: 'Policy & Safety' },
-        { text: 'Test new features' }
-      ]
-    }
+    mostrar.value = false
+  } catch (error) {
+    console.error('Error al iniciar sesión con Google:', error);
   }
-}
+};
+
+const cerrarSesion = async () => {
+  try {
+    await auth.signOut();
+    user.value = [];
+    mostrar.value = true
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
+  }
+};
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Guarda datos relevantes del usuario en localStorage
+    const userData = {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      uid: user.uid,
+    };
+    localStorage.setItem("user", JSON.stringify(userData));
+  } else {
+    // Limpia localStorage si no hay usuario
+    localStorage.removeItem("user");
+  }
+})
+
+onMounted(() => {
+  const userData = localStorage.getItem("user");
+  if (userData) {
+    user.value = JSON.parse(userData);
+    mostrar.value = false
+  }
+})
+
 </script>
-
-<style lang="sass">
-.YL
-
-  &__toolbar-input-container
-    min-width: 100px
-    width: 55%
-
-  &__toolbar-input-btn
-    border-radius: 0
-    border-style: solid
-    border-width: 1px 1px 1px 0
-    border-color: rgba(0,0,0,.24)
-    max-width: 60px
-    width: 100%
-
-  &__drawer-footer-link
-    color: inherit
-    text-decoration: none
-    font-weight: 500
-    font-size: .75rem
-
-    &:hover
-      color: #000
-</style>

@@ -15,10 +15,10 @@
         <CardCelular v-for="(celular, index) in celulares" :key="index" :title="celular.modelo" :price="celular.precio"
           :imageUrl="celular.imagenesURL.frontal" />
         <!-- Celulares de ejemplo adicionales -->
-        <CardCelular title="Honor X5" price="80"
+        <!-- <CardCelular title="Honor X5" price="80"
           imageUrl="https://citycellmx.com/wp-content/uploads/2024/03/HONOR-X5.png" />
         <CardCelular title="Samsung Galaxy A25" price="240"
-          imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" />
+          imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" /> -->
       </div>
     </div>
   </q-page>
