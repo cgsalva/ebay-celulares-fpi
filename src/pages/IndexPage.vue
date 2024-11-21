@@ -13,21 +13,16 @@
 
       <div class="col-12 col-sm-9">
         <!-- Renderizar la lista de celulares -->
-        <CardCelular 
-          v-for="(celular, index) in celulares" 
+        <CardCelular
+          v-for="(celular, index) in celulares"
           :key="index"
           :marca="celular.marca"
           :modelo="celular.modelo"
           :precio="celular.precio"
-          :imageUrl="celular.imagenesURL.frontal" 
+          :imageUrl="celular.imagenesURL.frontal"
+          :id="celular.id"
         />
-        <!-- Celulares de ejemplo adicionales -->
-        <!--
-        <CardCelular marca="HONOR" modelo="X5" precio="80"
-          imageUrl="https://citycellmx.com/wp-content/uploads/2024/03/HONOR-X5.png" />
-        <CardCelular marca="Samsung" modelo="Galaxy A25" precio="240"
-          imageUrl="https://www.sagitariodigital.com.ar/wp-content/uploads/2024/01/A25-1.jpg" />
-        -->
+        <!-- Agregue para mandar el id y poder pasarlo a la página de detalle -->
       </div>
     </div>
   </q-page>
@@ -42,19 +37,22 @@ import CardCelular from '../components/CardCelular.vue';
 
 const celulares = ref([]); // Declaración de la variable reactiva
 
+
+// Función para obtener los celulares de la base de datos
 const fetchCelulares = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'celulares'));
     if (!querySnapshot.empty) {
-      celulares.value = querySnapshot.docs.map(doc => doc.data());
+      celulares.value = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      console.log('Celulares:', celulares.value);
     } else {
       console.warn('No se encontraron celulares en la base de datos.');
     }
-    console.log('Celulares obtenidos:', celulares.value);
   } catch (error) {
     console.error('Error al obtener los celulares:', error);
   }
 };
+
 
 // Llamada a la función al montar el componente
 onMounted(fetchCelulares);

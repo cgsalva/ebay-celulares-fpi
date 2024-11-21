@@ -16,7 +16,7 @@
         </div>
       </q-card-section>
       <q-card-actions>
-        <q-btn rounded color="blue-6" to="detalle" label="Ver más" class="q-mx-lg" style="width: 100px;" />
+        <q-btn rounded color="blue-6" :to="link(id)" label="Ver más" class="q-mx-lg" style="width: 100px;" />
       </q-card-actions>
     </q-card>
 
@@ -26,11 +26,17 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
   imageUrl: String,
   marca: String,
   modelo: String,
-  precio: Number
+  precio: Number,
+  id: String
 })
+// Función para generar la ruta de detalle de un celular y mandar el id
+const link = (id) => {
+  return `detalle/${id}`
+}
 
 </script>

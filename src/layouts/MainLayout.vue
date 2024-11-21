@@ -4,7 +4,7 @@
 
       <q-toolbar>
 
-        <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
+        <q-btn flat no-caps no-wrap to="/" class="q-ml-xs" v-if="$q.screen.gt.xs">
           <q-toolbar-title shrink class="text-weight-bold">
             Ebay Celulares
           </q-toolbar-title>

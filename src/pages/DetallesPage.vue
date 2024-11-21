@@ -4,30 +4,11 @@
       <div class="row">
         <div class="col-12 col-sm -7">
           <div class="q-pa-md">
-            <q-carousel
-              swipeable
-              animated
-              v-model="slide"
-              thumbnails
-              infinite
-              navigation-position="left"
-            >
-              <q-carousel-slide
-                :name="1"
-                img-src="https://cdn.quasar.dev/img/mountains.jpg"
-              />
-              <q-carousel-slide
-                :name="2"
-                img-src="https://cdn.quasar.dev/img/parallax1.jpg"
-              />
-              <q-carousel-slide
-                :name="3"
-                img-src="https://cdn.quasar.dev/img/parallax2.jpg"
-              />
-              <q-carousel-slide
-                :name="4"
-                img-src="https://cdn.quasar.dev/img/quasar.jpg"
-              />
+            <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="left">
+              <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />
+              <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
+              <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
+              <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
             </q-carousel>
           </div>
         </div>
@@ -35,7 +16,7 @@
           <q-card class="my-card q-ma-sm" flat bordered style="width: auto">
             <q-card-section>
               <div class="col-12 text-h5 q-mb-xs">
-                Nombres del Producto:(inserte union a db*)
+                Nombres del celular:{{ celular.marca }} {{ celular.modelo }}
               </div>
             </q-card-section>
             <q-card-section>
@@ -52,24 +33,12 @@
             </q-card-section>
             <q-card-section>
               <div class="col-12 text-body1 q-mb-xs">
-                <q-btn
-                  outline
-                  rounded
-                  color="primary"
-                  label="añadir al carro"
-                  style="width: 100%"
-                />
+                <q-btn outline rounded color="primary" label="añadir al carro" style="width: 100%" />
               </div>
             </q-card-section>
             <q-card-section>
               <div class="col-12 text-body1 q-mb-xs">
-                <q-btn
-                  outline
-                  rounded
-                  color="primary"
-                  label="añadir a la lista de favoritos"
-                  style="width: 100%"
-                />
+                <q-btn outline rounded color="primary" label="añadir a la lista de favoritos" style="width: 100%" />
               </div>
             </q-card-section>
           </q-card>
@@ -121,12 +90,36 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import CardCelular from "../components/CardCelular.vue";
-
-const slide = ref(1);
+import { useRoute } from "vue-router";
+import { db } from "src/boot/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 defineOptions({
   name: "DetallesPage",
 });
+
+const slide = ref(1);
+const route = useRoute();
+const id = route.params.ID; //obtenemos el id de la ruta
+const celular = ref([]);
+
+const celularPorID = async () => {
+  //ya que solo es un documento, usamos getDoc
+  const docSnap = await getDoc(doc(db, "celulares", id));
+  if (docSnap.exists()) {
+    celular.value = docSnap.data();
+    console.log("Document data:", celular.value);//para confirmar que se obtuvo la data
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+};
+
+onMounted(() => {
+  console.log("ID:", id);//verificar que se obtuvo el id
+  celularPorID()//llamamos a la funcion para obtener el celular por id
+});
+
 </script>
