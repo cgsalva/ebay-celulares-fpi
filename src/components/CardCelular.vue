@@ -35,8 +35,5 @@ const props = defineProps({
   id: String
 })
 // Función para generar la ruta de detalle de un celular y mandar el id
-const link = (id) => {
-  return `detalle/${id}`
-}
-
+const link = id => `detalle/${id}`
 </script>

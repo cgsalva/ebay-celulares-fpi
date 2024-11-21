@@ -21,7 +21,7 @@
             </q-card-section>
             <q-card-section>
               <div class="col-12 text-subtitle1 q-mb-xs">
-                Precio:(inserte union a db*)
+                Precio: ${{ celular.precio }}
               </div>
             </q-card-section>
 
@@ -91,29 +91,35 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { db } from "src/boot/firebase";
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore/lite';
 import CardCelular from "../components/CardCelular.vue";
 import { useRoute } from "vue-router";
-import { db } from "src/boot/firebase";
-import { doc, getDoc } from "firebase/firestore";
 
 defineOptions({
   name: "DetallesPage",
 });
 
 const slide = ref(1);
-const route = useRoute();
-const id = route.params.ID; //obtenemos el id de la ruta
+const id = useRoute().params.ID; //obtenemos el id de la ruta
 const celular = ref([]);
 
 const celularPorID = async () => {
-  //ya que solo es un documento, usamos getDoc
-  const docSnap = await getDoc(doc(db, "celulares", id));
-  if (docSnap.exists()) {
-    celular.value = docSnap.data();
-    console.log("Document data:", celular.value);//para confirmar que se obtuvo la data
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
+  try {  
+    const docSnap = await getDoc(doc(db, 'celulares', id));
+
+    if (docSnap.exists()) {
+      // Si el documento existe, devuelve los datos
+      console.log("Datos del documento:", docSnap.data());
+      celular.value = docSnap.data();
+      //return docSnap.data();
+    } else {
+      // Si el documento no existe
+      console.log("No se encontró el documento.");
+    }
+    
+  } catch (error) {
+    console.error("Error al obtener el documento:", error);
   }
 };
 
