@@ -4,7 +4,12 @@
       <!-- para las options esta todo en filtros por lo que solo hay que llamar al array indicado
        en firebase se puede ver su nombre -->
       <q-item-section>
-        <q-select v-model="modelPrecio" :options="filtros.precios" label="Precio" borderless />
+        <!-- <q-select v-model="modelPrecio" :options="filtros.precios" label="Precio" borderless /> -->
+        <!-- <q-select v-model="modelPrecio" label="Precio" borderless /> -->
+        <label for="precio">
+          Precio: $ {{ modelPrecio }}
+        </label>
+        <q-slider id="precio" v-model="modelPrecio" :min="0" :max="500" />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
@@ -29,7 +34,26 @@
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelAlmacenamiento" :options="filtros.almacenamiento" label="Almacenamiento Interno" borderless />
+        <q-select v-model="modelAlmacenamiento" :options="filtros.almacenamiento" label="Almacenamiento Interno"
+          borderless />
+      </q-item-section>
+    </q-item>
+    <q-item>
+      <q-item-section>
+        <q-btn @click="limpiarFiltros" label="Limpiar" color="primary" />
+      </q-item-section>
+      <q-item-section>
+        <q-btn @click="$emit('filtros', {
+          precio: modelPrecio,
+          marca: modelMarca,
+          pantalla: modelPantalla,
+          so: modelSO,
+          color: modelColor,
+          almacenamiento: modelAlmacenamiento
+        })"
+        label="Aplicar"
+        color="primary"
+        />
       </q-item-section>
     </q-item>
   </q-list>
@@ -42,19 +66,37 @@ import { collection, getDocs } from 'firebase/firestore/lite';
 
 const filtros = ref([])
 
-const modelPrecio = ref([''])
+const modelPrecio = ref(0)
 
-const modelMarca = ref([''])
+const modelMarca = ref('')
 
-const modelPantalla = ref([''])
+const modelPantalla = ref('')
 
-const modelSO = ref([''])
+const modelSO = ref('')
 
-const modelColor = ref([''])
+const modelColor = ref('')
 
-const modelAlmacenamiento = ref([''])
+const modelAlmacenamiento = ref('')
 
-const precios = ref(['$0.00 - $99.99', '$100 - $199.99', '$200 - Superior'])
+//const precios = ref(['$0.00 - $99.99', '$100 - $199.99', '$200 - Superior'])
+
+/* const emitirFiltros = {
+  precio: modelPrecio.value,
+  marca: modelMarca.value,
+  pantalla: modelPantalla.value,
+  so: modelSO.value,
+  color: modelColor.value,
+  almacenamiento: modelAlmacenamiento.value
+} */
+
+const limpiarFiltros = () => {
+  modelPrecio.value = 0
+  modelMarca.value = ''
+  modelPantalla.value = ''
+  modelSO.value = ''
+  modelColor.value = ''
+  modelAlmacenamiento.value = ''
+}
 
 onMounted(//esta dentro de onMounted para que se ejecute cuando se monte el componente
   async () => {
