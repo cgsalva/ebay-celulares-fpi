@@ -19,19 +19,19 @@
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelPantalla" :options="filtros.pantalla" label="Tamaño de pantalla" borderless />
+        <q-select v-model="modelPantalla" :options="filtros.pantalla" label="Pantalla" borderless />
       </q-item-section>
     </q-item>
-    <q-item clickable v-ripple>
+    <!-- <q-item clickable v-ripple>
       <q-item-section>
         <q-select v-model="modelSO" :options="filtros.sistemaOperativo" label="Sistema Operativo" borderless />
       </q-item-section>
-    </q-item>
-    <q-item clickable v-ripple>
+    </q-item> -->
+    <!-- <q-item clickable v-ripple>
       <q-item-section>
         <q-select v-model="modelColor" :options="filtros.colores" label="Color" borderless />
       </q-item-section>
-    </q-item>
+    </q-item> -->
     <q-item clickable v-ripple>
       <q-item-section>
         <q-select v-model="modelAlmacenamiento" :options="filtros.almacenamiento" label="Almacenamiento Interno"
@@ -39,16 +39,14 @@
       </q-item-section>
     </q-item>
     <q-item>
-      <q-item-section>
-        <q-btn @click="limpiarFiltros" label="Limpiar" color="primary" />
+      <q-item-section @click="limpiarFiltros">
+        <q-btn @click="$emit('limpiar', {})" label="Limpiar" color="primary" />
       </q-item-section>
       <q-item-section>
         <q-btn @click="$emit('filtros', {
           precio: modelPrecio,
           marca: modelMarca,
           pantalla: modelPantalla,
-          so: modelSO,
-          color: modelColor,
           almacenamiento: modelAlmacenamiento
         })"
         label="Aplicar"
@@ -72,10 +70,6 @@ const modelMarca = ref('')
 
 const modelPantalla = ref('')
 
-const modelSO = ref('')
-
-const modelColor = ref('')
-
 const modelAlmacenamiento = ref('')
 
 //const precios = ref(['$0.00 - $99.99', '$100 - $199.99', '$200 - Superior'])
@@ -93,8 +87,6 @@ const limpiarFiltros = () => {
   modelPrecio.value = 0
   modelMarca.value = ''
   modelPantalla.value = ''
-  modelSO.value = ''
-  modelColor.value = ''
   modelAlmacenamiento.value = ''
 }
 
