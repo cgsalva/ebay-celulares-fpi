@@ -66,7 +66,7 @@
                 <q-btn to="/admin" color="primary" label="Administrar"/>
               </q-item>
               <q-item>
-                <q-btn @click="cerrarSesion" color="secondary" label="Cerrar Sesión" />
+                <q-btn @click="cerrarSesion" to="/" color="secondary" label="Cerrar Sesión" />
               </q-item>
             </q-list>
           </q-btn-dropdown>
