@@ -37,7 +37,7 @@ import CardCelular from '../components/CardCelular.vue';
 const celulares = ref([]); // Declaración de la variable reactiva
 const Filtros = ref({}); // Declaración de la variable reactiva
 const celularesFiltrados = ref([]); // Celulares filtrados
-const mostrar = ref(true);
+
 
 const conseguirFiltros = (emitirFiltros) => {
   // Asignar los filtros a la variable reactiva
@@ -88,7 +88,7 @@ const fetchCelulares = async () => {
   } catch (error) {
     console.error('Error al obtener los celulares:', error);
   }
-  celularesFiltrados.value = celulares.value;
+  filtrarCelulares();
 };
 
 

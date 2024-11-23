@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref } from 'vue';
 import { db } from "src/boot/firebase";
 import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
 import CardCelular from "../components/CardCelular.vue";
@@ -118,6 +118,7 @@ const celular = ref([]);
 const camaras = ref('')
 const userId = ref('') //referencia al id del usuario
 const cantidad = ref(1)
+const emit = defineEmits(['updateCarrito']);
 
 const agregarCarrito = async () => {
   try {
@@ -133,12 +134,11 @@ const agregarCarrito = async () => {
         await updateDoc(userRef, { carrito: [] });
       }
     }
-
     // Agregar producto al carrito
     await updateDoc(userRef, {
       carrito: arrayUnion(id)
     });
-
+    emit('updateCarrito');
     console.log("Producto agregado al carrito con éxito");
   } catch (error) {
     console.error("Error al agregar producto al carrito:", error);
@@ -157,7 +157,6 @@ const celularPorID = async () => {
 
     if (docSnap.exists()) {
       // Si el documento existe, devuelve los datos
-      console.log("Datos del documento:", docSnap.data());
       celular.value = docSnap.data();
       const principal = celular.value.camaraTrasera.Principal
       const granAngular = celular.value.camaraTrasera.Gran_angular

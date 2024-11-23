@@ -35,9 +35,20 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ telefono.marca + ' ' + telefono.modelo }}</q-item-label>
+                  <div class="text-subtitle1">${{ telefono.precio }}</div>
+                </q-item-section>
+                <q-item-section >
+                  <q-btn @click="eliminarCarrito(telefono.id, telefono.precio)" icon="delete" flat />
                 </q-item-section>
               </q-item>
-
+              <q-item>
+                <q-item-section>
+                  <q-item-label>Total</q-item-label>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>${{ total }}</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-btn-dropdown>
           <q-btn v-if="mostrar == true" @click="loginGoogle" color="primary" label="Iniciar Sesión" class="q-mx-md" />
@@ -69,14 +80,14 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <router-view @updateCarrito="fetchCarrito" />
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
-import { collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore/lite';
+import { collection, getDocs, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore/lite';
 import { auth, db, provider } from 'src/boot/firebase';
 import { onMounted, ref } from 'vue';
 
@@ -85,20 +96,42 @@ const mostrar = ref(true)
 const isAdmin = ref(false)
 const carrito = ref([])
 const celulares = ref([])
+const total = ref(0)
+const eliminarCarrito = async (id, precio) => {
+  try {
+    const userRef = doc(db, "user", user.value.email);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+    const newCarrito = userData.carrito.filter(celular => celular !== id);
+    await updateDoc(userRef, { carrito: newCarrito });
+    total.value -= precio
+    fetchCarrito()
+  } catch (error) {
+    console.error('Error al eliminar el celular del carrito:', error);
+  }
+}
 
 const fetchCelularesCarrito = async () => {
   try {
-    const celularesArray = [];
-    for (const celular of carrito.value) {
-      const docRef = doc(db, 'celulares', celular);
+    let celularesArray = [];
+    total.value = 0
+    for (const celularId of carrito.value) {
+      const docRef = doc(db, 'celulares', celularId);
       const docSnap = await getDoc(docRef);
-      celularesArray.push(docSnap.data());
+
+      if (docSnap.exists()) {
+        celularesArray.push({ id: celularId, ...docSnap.data() });
+        total.value += Number(docSnap.data().precio)
+      } else {
+        console.warn(`El documento con id ${celularId} no existe.`);
+      }
     }
     celulares.value = celularesArray;
   } catch (error) {
     console.error('Error al obtener los celulares del carrito:', error);
   }
-}
+};
+
 
 const fetchCarrito = async () => {
   try {
