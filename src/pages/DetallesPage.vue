@@ -102,7 +102,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { db } from "src/boot/firebase";
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore/lite';
+import { doc, getDoc } from 'firebase/firestore/lite';
 import CardCelular from "../components/CardCelular.vue";
 import { useRoute } from "vue-router";
 
@@ -121,7 +121,7 @@ const decrement = () => {
 }
 
 const celularPorID = async () => {
-  try {  
+  try {   
     const docSnap = await getDoc(doc(db, 'celulares', id));
 
     if (docSnap.exists()) {
@@ -133,7 +133,7 @@ const celularPorID = async () => {
       // Si el documento no existe
       console.log("No se encontró el documento.");
     }
-    
+
   } catch (error) {
     console.error("Error al obtener el documento:", error);
   }

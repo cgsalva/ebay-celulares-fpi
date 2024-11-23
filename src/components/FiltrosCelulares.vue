@@ -9,7 +9,7 @@
         <label for="precio">
           Precio: $ {{ modelPrecio }}
         </label>
-        <q-slider id="precio" v-model="modelPrecio" :min="0" :max="500" />
+        <q-slider id="precio" v-model="modelPrecio" :min="0" :max="1500" />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
@@ -38,6 +38,11 @@
           borderless />
       </q-item-section>
     </q-item>
+    <q-item clickable v-ripple>
+      <q-item-section>
+        <q-select v-model="modelRam" :options="filtros.ram" label="Memoria RAM" />
+      </q-item-section>
+    </q-item>
     <q-item>
       <q-item-section @click="limpiarFiltros">
         <q-btn @click="$emit('limpiar', {})" label="Limpiar" color="primary" />
@@ -47,11 +52,9 @@
           precio: modelPrecio,
           marca: modelMarca,
           pantalla: modelPantalla,
-          almacenamiento: modelAlmacenamiento
-        })"
-        label="Aplicar"
-        color="primary"
-        />
+          almacenamiento: modelAlmacenamiento,
+          ram: modelRam
+        })" label="Aplicar" color="primary" />
       </q-item-section>
     </q-item>
   </q-list>
@@ -63,25 +66,11 @@ import { db } from 'src/boot/firebase'
 import { collection, getDocs } from 'firebase/firestore/lite';
 
 const filtros = ref([])
-
 const modelPrecio = ref(0)
-
 const modelMarca = ref('')
-
 const modelPantalla = ref('')
-
 const modelAlmacenamiento = ref('')
-
-//const precios = ref(['$0.00 - $99.99', '$100 - $199.99', '$200 - Superior'])
-
-/* const emitirFiltros = {
-  precio: modelPrecio.value,
-  marca: modelMarca.value,
-  pantalla: modelPantalla.value,
-  so: modelSO.value,
-  color: modelColor.value,
-  almacenamiento: modelAlmacenamiento.value
-} */
+const modelRam = ref('')
 
 const limpiarFiltros = () => {
   modelPrecio.value = 0

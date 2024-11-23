@@ -62,11 +62,15 @@
                   <q-item-label caption>{{ user.email }}</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-item v-if="isAdmin == true">
+                <q-btn to="/admin" color="primary" label="Administrar"/>
+              </q-item>
               <q-item>
                 <q-btn @click="cerrarSesion" color="secondary" label="Cerrar Sesión" />
               </q-item>
             </q-list>
           </q-btn-dropdown>
+
         </div>
       </q-toolbar>
     </q-header>
@@ -79,19 +83,19 @@
 
 <script setup>
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
-import { auth, provider } from 'src/boot/firebase';
+import { collection, getDocs } from 'firebase/firestore/lite';
+import { auth, db, provider } from 'src/boot/firebase';
 import { onMounted, ref } from 'vue';
 
 const user = ref([])
 const mostrar = ref(true)
-
+const isAdmin = ref(false)
 
 
 const loginGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
     user.value = result.user;
-    console.log('Usuario:', JSON.stringify(user.value));
 
     mostrar.value = false
   } catch (error) {
@@ -123,7 +127,25 @@ onAuthStateChanged(auth, (user) => {
     // Limpia localStorage si no hay usuario
     localStorage.removeItem("user");
   }
+  fetchAdmins()
 })
+
+const fetchAdmins = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'admins'));
+    const adminsArray = querySnapshot.docs.map(doc => doc.data());
+
+    const admin = adminsArray.find(admin => admin.email === user.value.email);
+
+    if (admin) {
+      isAdmin.value = true;
+    } else {
+      isAdmin.value = false;
+    }
+  } catch (error) {
+    console.error('Error al obtener los admins:', error);
+  }
+}
 
 onMounted(() => {
   const userData = localStorage.getItem("user");
@@ -131,6 +153,7 @@ onMounted(() => {
     user.value = JSON.parse(userData);
     mostrar.value = false
   }
+  fetchAdmins()
 })
 
 </script>
