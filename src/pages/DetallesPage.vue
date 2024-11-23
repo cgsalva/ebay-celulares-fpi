@@ -10,12 +10,12 @@
                 <q-carousel-slide
                   v-for="(imagen, index) in celular.imagenesURL"
                   :key="index"
-                  :name="index" 
+                  :name="index"
                   :img-src="imagen" />
               </q-carousel>
             </div>
           </q-card-section>
-       
+
           <q-card-section class="col-12 col-sm-8">
             <div class="q-pl-md q-py-lg">
               <div class="text-subtitle1 text-grey-8">{{ celular.marca }}</div>
@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                   <td><b>Cámara</b></td>
-                  <td class="column items-end">dd</td>
+                  <td class="column items-end">{{ camaras }}</td>
                 </tr>
                 <tr>
                   <td><b>Cámara Frontal</b></td>
@@ -73,7 +73,7 @@
           </div>
         </div>
       </q-card>
-      
+
       <div class="row">
         <div class="col">
           <CardCelular />
@@ -113,6 +113,7 @@ defineOptions({
 const slide = ref('frontal');
 const id = useRoute().params.ID; //obtenemos el id de la ruta
 const celular = ref([]);
+const camaras = ref('')
 
 const cantidad = ref(1)
 
@@ -121,13 +122,18 @@ const decrement = () => {
 }
 
 const celularPorID = async () => {
-  try {   
+  try {
     const docSnap = await getDoc(doc(db, 'celulares', id));
 
     if (docSnap.exists()) {
       // Si el documento existe, devuelve los datos
       console.log("Datos del documento:", docSnap.data());
       celular.value = docSnap.data();
+      const principal = celular.value.camaraTrasera.Principal
+      const granAngular = celular.value.camaraTrasera.Gran_angular
+      const macro = celular.value.camaraTrasera.Macro
+      const profundidad = celular.value.camaraTrasera.Profundidad
+      camaras.value = principal + ' '  + granAngular + ' ' + macro + '' + profundidad
       //return docSnap.data();
     } else {
       // Si el documento no existe
