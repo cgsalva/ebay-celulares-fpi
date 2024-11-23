@@ -1,69 +1,79 @@
 <template>
   <q-page class="background-gradient">
     <div class="col-12">
-      <div class="row">
-        <div class="col-12 col-sm -7">
-          <div class="q-pa-md">
-            <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="left">
-              <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />
-              <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
-              <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
-              <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
-            </q-carousel>
+      <q-card class="my-card q-ma-lg q-pb-lg" flat bordered style="width: auto">
+        <div class="row q-mt-lg">
+
+          <q-card-section class="col-12 col-sm-4">
+            <div class="q-py-md">
+              <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="bottom">
+                <q-carousel-slide
+                  v-for="(imagen, index) in celular.imagenesURL"
+                  :key="index"
+                  :name="index" 
+                  :img-src="imagen" />
+              </q-carousel>
+            </div>
+          </q-card-section>
+       
+          <q-card-section class="col-12 col-sm-8">
+            <div class="q-pl-md q-py-lg">
+              <div class="text-subtitle1 text-grey-8">{{ celular.marca }}</div>
+              <div class="text-h5 text-blue-10 q-mb-lg">{{ celular.modelo }}</div>
+              <div class="text-subtitle2 text-weight-regular text-grey-8 q-mt-lg">Desde</div>
+              <div class="text-h5 text-blue-10 q-mb-sm">${{ celular.precio }}</div>
+              <div class="text-subtitle2 text-weight-regular text-grey-8">Incluye IVA</div>
+            </div>
+            <div class="q-mt-lg">
+              <q-input outlined rounded class="q-mb-lg" size="xs" v-model="cantidad" :dense="dense" style="width: 150px;">
+                <template v-slot:prepend>
+                  <q-btn round dense flat icon="remove" @click="decrement" />
+                </template>
+                <template v-slot:append>
+                  <q-btn round dense flat icon="add" @click="cantidad++"/>
+                </template>
+              </q-input>
+              <q-btn rounded color="blue-10" icon="shopping_cart" label="añadir al carrito" class="q-mr-xs q-my-sm" />
+              <q-btn rounded color="blue-10" icon="favorite" label="añadir a favoritos" class="q-my-xs" />
+            </div>
+          </q-card-section>
+        </div>
+
+        <div class="column items-center">
+          <h2 class="text-h5 text-blue-10 q-my-lg text-center">ESPECIFICACIONES</h2>
+          <div style="min-width: 50%;">
+            <table class="text-grey-8 text-subtitle1 q-my-lg" style="width: 100%;">
+              <tbody>
+                <tr>
+                  <td><b>Sistema Operativo</b></td>
+                  <td class="column items-end">{{ celular.sistemaOperativo }}</td>
+                </tr>
+                <tr>
+                  <td><b>Cámara</b></td>
+                  <td class="column items-end">dd</td>
+                </tr>
+                <tr>
+                  <td><b>Cámara Frontal</b></td>
+                  <td class="column items-end">{{ celular.camaraFrontal }}</td>
+                </tr>
+                <tr>
+                  <td><b>Pantalla</b></td>
+                  <td class="column items-end">Tamaño: {{ celular.tamanioPantalla }}</td>
+                </tr>
+                <tr>
+                  <td><b>RAM</b></td>
+                  <td class="column items-end">{{ celular.ram }}</td>
+                </tr>
+                <tr>
+                  <td><b>Almacenamiento</b></td>
+                  <td class="column items-end">{{ celular.almacenamiento }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <div class="col-12 col-sm-5">
-          <q-card class="my-card q-ma-sm" flat bordered style="width: auto">
-            <q-card-section>
-              <div class="col-12 text-h5 q-mb-xs">
-                Nombres del celular:{{ celular.marca }} {{ celular.modelo }}
-              </div>
-            </q-card-section>
-            <q-card-section>
-              <div class="col-12 text-subtitle1 q-mb-xs">
-                Precio: ${{ celular.precio }}
-              </div>
-            </q-card-section>
-
-            <q-separator />
-            <q-card-section>
-              <div class="col-12 text-body1 q-mb-xs">
-                Caracteristicas principales:(inserte union a db*)
-              </div>
-            </q-card-section>
-            <q-card-section>
-              <div class="col-12 text-body1 q-mb-xs">
-                <q-btn outline rounded color="primary" label="añadir al carro" style="width: 100%" />
-              </div>
-            </q-card-section>
-            <q-card-section>
-              <div class="col-12 text-body1 q-mb-xs">
-                <q-btn outline rounded color="primary" label="añadir a la lista de favoritos" style="width: 100%" />
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <q-card class="my-card" flat bordered>
-            <q-card-section>
-              <div class="col-12 text-body1 q-mb-xs">
-                Mas informacion:(inserte union a db*)
-              </div>
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <div class="col-12 text-body1 q-mb-xs">
-                Texto detallado:(inserte union a db*)
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="col-12">
-          <div class="text-h5 q-ml-lg">Articulos similares</div>
-        </div>
-      </div>
+      </q-card>
+      
       <div class="row">
         <div class="col">
           <CardCelular />
@@ -100,9 +110,15 @@ defineOptions({
   name: "DetallesPage",
 });
 
-const slide = ref(1);
+const slide = ref('frontal');
 const id = useRoute().params.ID; //obtenemos el id de la ruta
 const celular = ref([]);
+
+const cantidad = ref(1)
+
+const decrement = () => {
+  if (cantidad.value > 1) cantidad.value--
+}
 
 const celularPorID = async () => {
   try {  
@@ -127,5 +143,4 @@ onMounted(() => {
   console.log("ID:", id);//verificar que se obtuvo el id
   celularPorID()//llamamos a la funcion para obtener el celular por id
 });
-
 </script>
