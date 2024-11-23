@@ -33,7 +33,7 @@
                   <q-btn round dense flat icon="add" @click="cantidad++"/>
                 </template>
               </q-input>
-              <q-btn rounded color="blue-10" icon="shopping_cart" label="añadir al carrito" class="q-mr-xs q-my-sm" />
+              <q-btn @click="agregarCarrito" reload rounded color="blue-10" icon="shopping_cart" label="añadir al carrito" class="q-mr-xs q-my-sm" />
               <q-btn rounded color="blue-10" icon="favorite" label="añadir a favoritos" class="q-my-xs" />
             </div>
           </q-card-section>
@@ -102,7 +102,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { db } from "src/boot/firebase";
-import { doc, getDoc } from 'firebase/firestore/lite';
+import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
 import CardCelular from "../components/CardCelular.vue";
 import { useRoute } from "vue-router";
 
@@ -110,12 +110,42 @@ defineOptions({
   name: "DetallesPage",
 });
 
+
+
 const slide = ref('frontal');
 const id = useRoute().params.ID; //obtenemos el id de la ruta
 const celular = ref([]);
 const camaras = ref('')
-
+const userId = ref('') //referencia al id del usuario
 const cantidad = ref(1)
+
+const agregarCarrito = async () => {
+  try {
+    const userRef = doc(db, "user", userId.value);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+
+      // Si el campo `carrito` no existe o no es un array, inicialízalo
+      if (!Array.isArray(userData.carrito)) {
+        console.warn("Campo 'carrito' no es un array. Inicializando...");
+        await updateDoc(userRef, { carrito: [] });
+      }
+    }
+
+    // Agregar producto al carrito
+    await updateDoc(userRef, {
+      carrito: arrayUnion(id)
+    });
+
+    console.log("Producto agregado al carrito con éxito");
+  } catch (error) {
+    console.error("Error al agregar producto al carrito:", error);
+  }
+};
+
+
 
 const decrement = () => {
   if (cantidad.value > 1) cantidad.value--
@@ -146,7 +176,11 @@ const celularPorID = async () => {
 };
 
 onMounted(() => {
-  console.log("ID:", id);//verificar que se obtuvo el id
+  const userData = localStorage.getItem("user");
+  if (userData) {
+    userId.value = JSON.parse(userData).email;
+  }
+  //verificar que se obtuvo el id
   celularPorID()//llamamos a la funcion para obtener el celular por id
 });
 </script>

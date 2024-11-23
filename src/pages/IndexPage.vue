@@ -89,7 +89,6 @@ const fetchCelulares = async () => {
     console.error('Error al obtener los celulares:', error);
   }
   celularesFiltrados.value = celulares.value;
-  console.log('Celulares Filtrados:', JSON.stringify(celularesFiltrados.value));
 };
 
 

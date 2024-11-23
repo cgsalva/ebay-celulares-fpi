@@ -24,27 +24,20 @@
           <q-btn-dropdown dense flat color="grey-8" icon="shopping_cart">
             <template v-slot:label>
               <q-badge color="red" text-color="white" floating>
-                2
+                {{ carrito.length }}
               </q-badge>
             </template>
             <q-tooltip>Compra</q-tooltip>
             <q-list>
-              <q-item clickable v-close-popup @click="onItemClick">
+              <q-item v-for="(telefono, index) in celulares" :key="index" clickable v-close-popup>
                 <q-item-section avatar>
                   <q-avatar icon="smartphone" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Samsung</q-item-label>
+                  <q-item-label>{{ telefono.marca + ' ' + telefono.modelo }}</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="onItemClick">
-                <q-item-section avatar>
-                  <q-avatar icon="phone_iphone" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Iphone</q-item-label>
-                </q-item-section>
-              </q-item>
+
             </q-list>
           </q-btn-dropdown>
           <q-btn v-if="mostrar == true" @click="loginGoogle" color="primary" label="Iniciar Sesión" class="q-mx-md" />
@@ -83,20 +76,47 @@
 
 <script setup>
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore/lite';
 import { auth, db, provider } from 'src/boot/firebase';
 import { onMounted, ref } from 'vue';
 
 const user = ref([])
 const mostrar = ref(true)
 const isAdmin = ref(false)
+const carrito = ref([])
+const celulares = ref([])
 
+const fetchCelularesCarrito = async () => {
+  try {
+    const celularesArray = [];
+    for (const celular of carrito.value) {
+      const docRef = doc(db, 'celulares', celular);
+      const docSnap = await getDoc(docRef);
+      celularesArray.push(docSnap.data());
+    }
+    celulares.value = celularesArray;
+  } catch (error) {
+    console.error('Error al obtener los celulares del carrito:', error);
+  }
+}
+
+const fetchCarrito = async () => {
+  try {
+    const docRef = doc(db, 'user', user.value.email);
+    const docSnap = await getDoc(docRef);
+    carrito.value = docSnap.data().carrito;
+    fetchCelularesCarrito()
+  } catch (error) {
+    console.error('Error al obtener el carrito:', error);
+  }
+}
 
 const loginGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
     user.value = result.user;
-
+    const docRef = doc(db, "user", user.value.email);
+    await setDoc(docRef, {carrito: []});
     mostrar.value = false
   } catch (error) {
     console.error('Error al iniciar sesión con Google:', error);
@@ -153,6 +173,7 @@ onMounted(() => {
     user.value = JSON.parse(userData);
     mostrar.value = false
   }
+  fetchCarrito()
   fetchAdmins()
 })
 
