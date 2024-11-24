@@ -1,111 +1,10 @@
 <template>
   <q-page>
-    <h1 class="text-h6 q-mx-xl">Administrar contenido</h1>
-    <div class="q-pa-md flex">
+    <!--<h1 class="text-h6 q-mx-xl">Administrar contenido</h1>-->
 
-      <div class="q-pa-md" style="max-width: 500px">
-        <q-expansion-item icon="filter_alt" label="Agregar Celular">
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-select v-model="modelMarca" :options="filtros.marcas" label="Marcas" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelModelo" type="text" label="Modelo" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-select v-model="modelAlmacenamiento" :options="filtros.almacenamiento"
-                label="Almacenamiento Interno" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-select v-model="modelRam" :options="filtros.ram" label="Memoria RAM" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-select v-model="modelSistema" :options="filtros.sistema" label="Sistema Operativo" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelVersion" label="Versión de Sistema Operativo" type="number" />
-            </q-item-section>
-          </q-item>
 
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-select v-model="modelPantalla" :options="filtros.pantalla" label="Pantalla" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelTamanio" label="Tamaño de pantalla" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelBateria" suffix="mAh" label="Batería" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelCamaras.frontal" suffix="Mpx" label="Camara Frontal" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelCamaras.principal" suffix="Mpx" label="Camara Principal" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelCamaras.granAngular" suffix="Mpx" label="Camara Gran Angular" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelCamaras.macro" suffix="Mpx" label="Camara Macro" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelCamaras.profundidad" suffix="Mpx" label="Camara de Profundidad" type="number" />
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-toggle v-model="modelNfc" label="NFC" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelImagenesURL.frontal" label="URL de la imagen frontal" type="url" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelImagenesURL.trasera" label="URL de la imagen trasera" type="url" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-input v-model="modelPrecio" @input="validarPrecio" prefix="$" label="Precio" type="number" />
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              <q-btn @click="agregarCelular" color="primary" label="Agregar Celular" />
-            </q-item-section>
-          </q-item>
-        </q-expansion-item>
-      </div>
       <!-- Agregar nuevo admin -->
+      <!--
       <div class="q-pa-md" style="max-width: 350px">
         <q-expansion-item icon="filter_alt" label="Agregar Admin">
           <q-item-section clickable v-ripple class="q-mb-md">
@@ -116,6 +15,7 @@
           </q-item-section>
         </q-expansion-item>
       </div>
+    -->
       <!-- Agregar más filtros -->
       <!--  <div class="q-pa-md" style="max-width: 350px">
         <q-expansion-item icon="filter_alt" label="Agregar Filtros">
@@ -124,44 +24,228 @@
           </q-item-section>
         </q-expansion-item>
       </div> -->
-    </div>
 
 
     <div class="q-pa-md">
-    <q-table
-      flat bordered
-      :rows="celulares"
-      :columns="columns"
-      row-key="name"
-      :filter="filter"
-      hide-pagination>
-      <template v-slot:top-left>
-        <q-input outlined  dense debounce="300" v-model="filter" placeholder="Buscar celular">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </template>
-      <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="marca" :props="props">
-              {{ props.row.marca }}
-            </q-td>
-            <q-td key="modelo" :props="props">
-              {{ props.row.modelo }}
-            </q-td>
-            <q-td key="os" :props="props">
-              {{ props.row.sistemaOperativo }}
-            </q-td>
-            <q-td key="precio" :props="props">
-              ${{ props.row.precio }}
-            </q-td>
-            <q-td key="imagenUrl" :props="props">
-              <img :src="props.row.imagenesURL.frontal" width="50px">
-            </q-td>
-          </q-tr>
+      <q-table
+        flat bordered
+        :rows="celulares"
+        :columns="columns"
+        row-key="name"
+        :filter="filter"
+        >
+        <template v-slot:top-left>
+          <q-input outlined  dense debounce="300" v-model="filter" placeholder="Buscar celular">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+          <q-btn @click="modalCelular = true" color="primary" class="q-mx-sm" icon="add" size="sm" round />
         </template>
-    </q-table>
+        <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key="marca" :props="props">
+                {{ props.row.marca }}
+              </q-td>
+              <q-td key="modelo" :props="props">
+                {{ props.row.modelo }}
+              </q-td>
+              <q-td key="os" :props="props">
+                {{ props.row.sistemaOperativo }}
+              </q-td>
+              <q-td key="precio" :props="props">
+                ${{ props.row.precio }}
+              </q-td>
+              <q-td key="imagenUrl" :props="props">
+                <img :src="props.row.imagenesURL.frontal" width="50px">
+              </q-td>
+            </q-tr>
+          </template>
+      </q-table>
+
+    <q-dialog 
+      v-model="modalCelular" 
+      maximized
+      transition-show="slide-up"
+      transition-hide="slide-down"
+    >
+      <q-card class="q-px-lg">
+        <q-toolbar class="q-mb-lg">
+            <q-toolbar-title class="text-center">Nuevo Celular</q-toolbar-title>
+            <q-btn flat v-close-popup round dense size="sm" icon="close" />
+          </q-toolbar>
+
+        <q-card-section class="q-pt-none">
+          
+          <q-list highlight>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="row">
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-select outlined v-model="modelMarca" :options="filtros.marcas" label="Marca" />
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelModelo" type="text" label="Modelo" />
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-select outlined v-model="modelAlmacenamiento" :options="filtros.almacenamiento"
+                      label="Almacenamiento Interno" />
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-select outlined v-model="modelRam" :options="filtros.ram" label="Memoria RAM" />
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-select outlined v-model="modelSistema" :options="filtros.sistema" label="Sistema Operativo" />
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelVersion" label="Versión de Sistema Operativo" type="number" />
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-select outlined v-model="modelPantalla" :options="filtros.pantalla" label="Pantalla" />
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelTamanio" label="Tamaño de pantalla" type="number" />
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelBateria" suffix="mAh" label="Batería" type="number" />
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelPrecio" @input="validarPrecio" prefix="$" label="Precio" type="number" />
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+            
+            
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-toggle v-model="modelNfc" label="NFC" />
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+            </div>
+              <div class="col-12 col-md-6">
+                <div class="row">
+                  <div class="col-12 col-md-6">
+                    <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelCamaras.principal" suffix="Mpx" label="Camara Principal" type="number" />
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelCamaras.frontal" suffix="Mpx" label="Camara Frontal" type="number" />
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelCamaras.granAngular" suffix="Mpx" label="Camara Gran Angular" type="number" />
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelCamaras.macro" suffix="Mpx" label="Camara Macro" type="number" />
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelCamaras.profundidad" suffix="Mpx" label="Camara de Profundidad" type="number" />
+                  </q-item-section>
+                </q-item>
+
+                  </div>
+              <div class="col-12 col-md-6">
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelImagenesURL.frontal" label="URL de la imagen frontal" type="url" />
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-input outlined v-model="modelImagenesURL.trasera" label="URL de la imagen trasera" type="url" />
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-carousel swipeable v-model="slide" thumbnails infinite navigation-position="left"
+                    style="width: 200px; height: 200px; padding-left:50px;">
+                <q-carousel-slide
+                  v-for="(imagen, index) in modelImagenesURL"
+                  :key="index"
+                  :name="index"
+                  :img-src="imagen"
+                />
+              </q-carousel>
+                  </q-item-section>
+                </q-item>
+              </div>
+            </div>
+              </div>
+            
+          </div>
+          <div class="row q-mt-lg">
+            <div class="col-12">
+              <q-item>
+                <q-btn label="Guardar" color="primary" @click="agregarCelular" v-close-popup />
+              </q-item>
+            </div>
+          </div>
+          </q-list>
+
+        </q-card-section>
+
+      </q-card>
+    </q-dialog>
+
   </div>
 
   </q-page>
@@ -170,6 +254,8 @@
 import { ref, onMounted } from 'vue' /* Importamos onMounted para poder  */
 import { db } from 'src/boot/firebase'
 import { collection, getDocs, addDoc } from 'firebase/firestore/lite';
+
+const slide = ref('frontal');
 
 const columns = [
   { name: 'marca', align: 'center', label: 'Marca', field: 'marca', sortable: true },
@@ -199,7 +285,11 @@ const modelImagenesURL = ref({ frontal: '', trasera: '' })
 
 const modelAdmin = ref('')
 
+const modalCelular = ref(false)
+
 const celulares = ref([]);
+
+const celular = ref({imagenesURL: { frontal: '', trasera: '' }})
 
 const validarPrecio = () => {
   if (modelPrecio.value < 0) {
