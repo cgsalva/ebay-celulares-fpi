@@ -6,7 +6,7 @@
 
         <q-btn flat no-caps no-wrap to="/" class="q-ml-xs" v-if="$q.screen.gt.xs">
           <q-toolbar-title shrink class="text-weight-bold">
-            Ebay Celulares
+            Smartphone Store
           </q-toolbar-title>
         </q-btn>
 
@@ -21,7 +21,8 @@
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn-dropdown dense flat color="grey-8" icon="shopping_cart">
+
+          <q-btn-dropdown flat color="grey-8" rounded icon="shopping_cart">
             <template v-slot:label>
               <q-badge color="red" text-color="white" floating>
                 {{ carrito.length }}
@@ -51,26 +52,45 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
+
           <q-btn v-if="mostrar == true" @click="loginGoogle" color="primary" label="Iniciar Sesión" class="q-mx-md" />
-          <q-btn-dropdown v-if="mostrar == false" round flat>
+
+          <q-btn-dropdown v-if="mostrar == false" rounded flat>
             <template v-slot:label>
               <q-avatar size="26px">
                 <img :src="user.photoURL">
               </q-avatar>
             </template>
 
-            <q-list>
-              <q-item>
+            <q-list separator style="width: 250px;">
+              <q-item class="q-py-md">
+                <q-item-section avatar>
+                  <q-avatar round>
+                    <img :src="user.photoURL">
+                  </q-avatar>
+                </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ user.displayName }}</q-item-label>
                   <q-item-label caption>{{ user.email }}</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item v-if="isAdmin == true">
-                <q-btn to="/admin" color="primary" label="Administrar"/>
+              <q-item clickable v-ripple to="/admin" v-if="isAdmin == true">
+                <q-item-section avatar>
+                  <q-icon color="primary" name="settings" />
+                </q-item-section>
+                <q-item-section>Administrar</q-item-section>
               </q-item>
-              <q-item>
-                <q-btn @click="cerrarSesion" to="/" color="secondary" label="Cerrar Sesión" />
+              <q-item clickable v-ripple>
+                <q-item-section avatar>
+                  <q-icon color="red" name="favorite" />
+                </q-item-section>
+                <q-item-section>Favoritos</q-item-section>
+              </q-item>
+              <q-item clickable v-ripple @click="cerrarSesion">
+                <q-item-section avatar>
+                  <q-icon color="grey-10" name="logout" />
+                </q-item-section>
+                <q-item-section>Cerrar Sesión</q-item-section>
               </q-item>
             </q-list>
           </q-btn-dropdown>

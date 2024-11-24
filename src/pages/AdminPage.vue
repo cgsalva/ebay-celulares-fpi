@@ -3,7 +3,7 @@
     <h1 class="text-h6 q-mx-xl">Administrar contenido</h1>
     <div class="q-pa-md flex">
 
-      <div class="q-pa-md" style="max-width: 350px">
+      <div class="q-pa-md" style="max-width: 500px">
         <q-expansion-item icon="filter_alt" label="Agregar Celular">
           <q-item clickable v-ripple>
             <q-item-section>
@@ -125,12 +125,61 @@
         </q-expansion-item>
       </div> -->
     </div>
+
+
+    <div class="q-pa-md">
+    <q-table
+      flat bordered
+      :rows="celulares"
+      :columns="columns"
+      row-key="name"
+      :filter="filter"
+      hide-pagination>
+      <template v-slot:top-left>
+        <q-input outlined  dense debounce="300" v-model="filter" placeholder="Buscar celular">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </template>
+      <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="marca" :props="props">
+              {{ props.row.marca }}
+            </q-td>
+            <q-td key="modelo" :props="props">
+              {{ props.row.modelo }}
+            </q-td>
+            <q-td key="os" :props="props">
+              {{ props.row.sistemaOperativo }}
+            </q-td>
+            <q-td key="precio" :props="props">
+              ${{ props.row.precio }}
+            </q-td>
+            <q-td key="imagenUrl" :props="props">
+              <img :src="props.row.imagenesURL.frontal" width="50px">
+            </q-td>
+          </q-tr>
+        </template>
+    </q-table>
+  </div>
+
   </q-page>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue' /* Importamos onMounted para poder  */
 import { db } from 'src/boot/firebase'
 import { collection, getDocs, addDoc } from 'firebase/firestore/lite';
+
+const columns = [
+  { name: 'marca', align: 'center', label: 'Marca', field: 'marca', sortable: true },
+  { name: 'modelo', align: 'center', label: 'Modelo', field: 'modelo', sortable: true },
+  { name: 'os', align: 'center', label: 'Sistema Operativo', field: 'os', sortable: true },
+  { name: 'precio', align: 'center', label: 'Precio', field: 'precio', sortable: true },
+  { name: 'imagenUrl', align: 'center', label: '', field: 'imagenUrl', sortable: false },
+]
+
+const filter = ref('')
 
 const filtros = ref([])
 //modelo de celular
@@ -149,6 +198,8 @@ const modelNfc = ref(false)
 const modelImagenesURL = ref({ frontal: '', trasera: '' })
 
 const modelAdmin = ref('')
+
+const celulares = ref([]);
 
 const validarPrecio = () => {
   if (modelPrecio.value < 0) {
@@ -216,6 +267,20 @@ const agregarCelular = async () => {
   }
 }
 
+const fetchCelulares = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'celulares'));
+    if (!querySnapshot.empty) {
+      celulares.value = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } else {
+      console.warn('No se encontraron celulares en la base de datos.');
+    }
+  } catch (error) {
+    console.error('Error al obtener los celulares:', error);
+  }
+  celularesFiltrados.value = celulares.value;
+};
+
 const fetchFiltros = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'filtros'));
@@ -227,7 +292,9 @@ const fetchFiltros = async () => {
   }
 }
 
-onMounted(fetchFiltros)
-
+onMounted(() => {
+  fetchFiltros()
+  fetchCelulares()
+})
 
 </script>

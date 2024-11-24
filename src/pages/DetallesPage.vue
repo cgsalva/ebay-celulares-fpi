@@ -6,7 +6,7 @@
 
           <q-card-section class="col-12 col-sm-4">
             <div class="q-py-md">
-              <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="bottom">
+              <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="left">
                 <q-carousel-slide
                   v-for="(imagen, index) in celular.imagenesURL"
                   :key="index"
