@@ -2,9 +2,9 @@
   <q-page class="background-gradient">
     <div class="col-12">
       <q-card class="my-card q-ma-lg q-pb-lg" flat bordered style="width: auto">
-        <div class="row q-mt-lg">
+        <div class="row q-mt-lg justify-center">
 
-          <q-card-section class="col-12 col-sm-4">
+          <q-card-section class="col-12 col-sm-4 q-pb-lg">
             <div class="q-py-md">
               <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="left">
                 <q-carousel-slide
@@ -16,7 +16,7 @@
             </div>
           </q-card-section>
 
-          <q-card-section class="col-12 col-sm-8">
+          <q-card-section class="col-12 col-sm-5">
             <div class="q-pl-md q-py-lg">
               <div class="text-subtitle1 text-grey-8">{{ celular.marca }}</div>
               <div class="text-h5 text-blue-10 q-mb-lg">{{ celular.modelo }}</div>
@@ -38,7 +38,7 @@
             </div>
           </q-card-section>
         </div>
-
+        <q-separator />
         <div class="column items-center">
           <h2 class="text-h5 text-blue-10 q-my-lg text-center">ESPECIFICACIONES</h2>
           <div style="min-width: 50%;">
@@ -74,20 +74,10 @@
         </div>
       </q-card>
 
-      <div class="row">
-        <div class="col">
-          <CardCelular />
-        </div>
-        <div class="col">
-          <CardCelular />
-        </div>
-        <div class="col">
-          <CardCelular />
-        </div>
-      </div>
+      <!--
       <div class="row">
         <div class="col-12">
-          <div class="text-h5 q-ml-lg">los clientes tambien compraron</div>
+          <div class="text-h5 q-ml-lg">Recomendados</div>
         </div>
       </div>
       <div class="row">
@@ -95,6 +85,7 @@
           <CardCelular />
         </div>
       </div>
+    -->
     </div>
   </q-page>
 </template>
