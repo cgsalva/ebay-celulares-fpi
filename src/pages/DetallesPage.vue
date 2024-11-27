@@ -7,10 +7,7 @@
           <q-card-section class="col-12 col-sm-4 q-pb-lg">
             <div class="q-py-md">
               <q-carousel swipeable animated v-model="slide" thumbnails infinite navigation-position="left">
-                <q-carousel-slide
-                  v-for="(imagen, index) in celular.imagenesURL"
-                  :key="index"
-                  :name="index"
+                <q-carousel-slide v-for="(imagen, index) in celular.imagenesURL" :key="index" :name="index"
                   :img-src="imagen" />
               </q-carousel>
             </div>
@@ -25,16 +22,18 @@
               <div class="text-subtitle2 text-weight-regular text-grey-8">Incluye IVA</div>
             </div>
             <div class="q-mt-lg">
-              <q-input outlined rounded class="q-mb-lg" size="xs" v-model="cantidad" :dense="dense" style="width: 150px;">
+              <q-input outlined rounded class="q-mb-lg" size="xs" v-model="cantidad" :dense="dense"
+                style="width: 150px;">
                 <template v-slot:prepend>
                   <q-btn round dense flat icon="remove" @click="decrement" />
                 </template>
                 <template v-slot:append>
-                  <q-btn round dense flat icon="add" @click="cantidad++"/>
+                  <q-btn round dense flat icon="add" @click="cantidad++" />
                 </template>
               </q-input>
-              <q-btn @click="agregarCarrito" reload rounded color="blue-10" icon="shopping_cart" label="añadir al carrito" class="q-mr-xs q-my-sm" />
-              <q-btn rounded color="blue-10" icon="favorite" label="añadir a favoritos" class="q-my-xs" />
+              <q-btn @click="agregarCarrito" reload rounded color="blue-10" icon="shopping_cart"
+                label="añadir al carrito" class="q-mr-xs q-my-sm" />
+              <q-btn @click="agregarFavorito" rounded color="blue-10" icon="favorite" label="añadir a favoritos" class="q-my-xs" />
             </div>
           </q-card-section>
         </div>
@@ -93,7 +92,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { db } from "src/boot/firebase";
-import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
+import { arrayUnion, doc, getDoc, runTransaction, updateDoc } from 'firebase/firestore/lite';
 import CardCelular from "../components/CardCelular.vue";
 import { useRoute } from "vue-router";
 
@@ -111,28 +110,63 @@ const userId = ref('') //referencia al id del usuario
 const cantidad = ref(1)
 const emit = defineEmits(['updateCarrito']);
 
+const agregarFavorito = async () => {
+  try {
+    const userRef = doc(db, "user", userId.value);
+    await runTransaction(db, async (transaction) => {
+      const userSnap = await transaction.get(userRef);
+
+      if (!userSnap.exists()) {
+        throw new Error("Usuario no encontrado.");
+      }
+
+      const userData = userSnap.data();
+      const favoritos = Array.isArray(userData.favoritos) ? userData.favoritos : [];
+
+      if (!favoritos.includes(id)) {
+        favoritos.push(id);
+      }
+
+      transaction.update(userRef, { favoritos });
+    });
+
+  } catch (error) {
+    console.error("Error al agregar producto a favoritos:", error);
+  }
+};
+
 const agregarCarrito = async () => {
   try {
     const userRef = doc(db, "user", userId.value);
-    const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-      const userData = userSnap.data();
+    await runTransaction(db, async (transaction) => {
+      const userSnap = await transaction.get(userRef);
 
-      // Si el campo `carrito` no existe o no es un array, inicialízalo
-      if (!Array.isArray(userData.carrito)) {
-        console.warn("Campo 'carrito' no es un array. Inicializando...");
-        await updateDoc(userRef, { carrito: [] });
+      if (!userSnap.exists()) {
+        throw new Error("Usuario no encontrado.");
       }
-    }
-    // Agregar producto al carrito
-    await updateDoc(userRef, {
-      carrito: arrayUnion(id)
+
+      const userData = userSnap.data();
+      const carrito = Array.isArray(userData.carrito) ? userData.carrito : [];
+
+      // Buscar si el producto ya existe en el carrito
+      const productoIndex = carrito.findIndex((item) => item.id === id);
+
+      if (productoIndex !== -1) {
+        // Si el producto ya existe, actualizamos la cantidad
+        carrito[productoIndex].cantidad += cantidad.value;
+      } else {
+        // Si el producto no existe, lo agregamos al carrito
+        carrito.push({ id: id, cantidad: cantidad.value });
+      }
+
+      // Actualizamos el documento del usuario con el carrito actualizado
+      transaction.update(userRef, { carrito });
     });
-    emit('updateCarrito');
-    console.log("Producto agregado al carrito con éxito");
+
+    emit("updateCarrito");
   } catch (error) {
-    console.error("Error al agregar producto al carrito:", error);
+    console.error("Error al agregar o actualizar producto en el carrito:", error);
   }
 };
 
@@ -153,7 +187,7 @@ const celularPorID = async () => {
       const granAngular = celular.value.camaraTrasera.Gran_angular
       const macro = celular.value.camaraTrasera.Macro
       const profundidad = celular.value.camaraTrasera.Profundidad
-      camaras.value = principal + ' '  + granAngular + ' ' + macro + '' + profundidad
+      camaras.value = principal + ' ' + granAngular + ' ' + macro + '' + profundidad
       //return docSnap.data();
     } else {
       // Si el documento no existe

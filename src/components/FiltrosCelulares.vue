@@ -6,10 +6,11 @@
       <q-item-section>
         <!-- <q-select v-model="modelPrecio" :options="filtros.precios" label="Precio" borderless /> -->
         <!-- <q-select v-model="modelPrecio" label="Precio" borderless /> -->
-        <label for="precio">
-          Precio: $ {{ modelPrecio }}
+        <label for="precio-rango">
+          Precio: ${{ modelPrecio.min }} - ${{ modelPrecio.max }}
         </label>
-        <q-slider id="precio" v-model="modelPrecio" :min="0" :max="1500" />
+        <q-range id="precio-rango" v-model="modelPrecio" :min="0" :max="1500" color="primary"
+          label="false" />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
@@ -66,7 +67,10 @@ import { db } from 'src/boot/firebase'
 import { collection, getDocs } from 'firebase/firestore/lite';
 
 const filtros = ref([])
-const modelPrecio = ref(0)
+const modelPrecio = ref({
+  min: 0,
+  max: 500,
+});
 const modelMarca = ref('')
 const modelPantalla = ref('')
 const modelAlmacenamiento = ref('')

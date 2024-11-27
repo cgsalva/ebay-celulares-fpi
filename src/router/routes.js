@@ -9,6 +9,7 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
       { path: "detalle/:ID", component: () => import("pages/DetallesPage.vue") },
+      { path: "favorites", component: () => import("pages/FavoritosPage.vue") },
       {
         path: "/admin",
         name: "admin",

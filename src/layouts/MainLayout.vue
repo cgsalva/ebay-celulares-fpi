@@ -30,26 +30,46 @@
             </template>
             <q-tooltip>Compra</q-tooltip>
             <q-list>
-              <q-item v-for="(telefono, index) in celulares" :key="index" clickable v-close-popup>
-                <q-item-section avatar>
-                  <q-avatar icon="smartphone" />
+              <q-item v-for="(telefono, index) in celulares" :key="index" clickable v-close-popup style="width: 240px;">
+                <q-item-section>
+                  <!-- <q-avatar icon="smartphone" /> -->
+                  <q-img :src="telefono.imagenesURL.frontal" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ telefono.marca + ' ' + telefono.modelo }}</q-item-label>
                   <div class="text-subtitle1">${{ telefono.precio }}</div>
                 </q-item-section>
-                <q-item-section >
-                  <q-btn @click="eliminarCarrito(telefono.id, telefono.precio)" icon="delete" flat />
-                </q-item-section>
-              </q-item>
-              <q-item>
                 <q-item-section>
-                  <q-item-label>Total</q-item-label>
+                  <div class="row items-center q-gutter-xs">
+                    <q-btn
+                    @click="decrementCantidad(telefono.id)"
+                    icon="remove"
+                    flat
+                    round dense
+                    size="sm"
+                    v-close-popup="false"
+                    />
+                    <span class="text-caption text-weight-bold">{{ telefono.cantidad }}</span>
+                    <q-btn
+                    @click="incrementCantidad(telefono.id)"
+                    icon="add"
+                    flat
+                    round
+                    dense
+                    v-close-popup="false"
+                    size="sm" />
+                  </div>
                 </q-item-section>
-                <q-item-section>
-                  <q-item-label>${{ total }}</q-item-label>
-                </q-item-section>
-              </q-item>
+                </q-item>
+
+                <q-item>
+                  <q-item-section>
+                    <q-item-label>Total</q-item-label>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>${{ total }}</q-item-label>
+                  </q-item-section>
+                </q-item>
             </q-list>
           </q-btn-dropdown>
 
@@ -80,7 +100,7 @@
                 </q-item-section>
                 <q-item-section>Administrar</q-item-section>
               </q-item>
-              <q-item clickable v-ripple>
+              <q-item clickable v-ripple to="/favorites">
                 <q-item-section avatar>
                   <q-icon color="red" name="favorite" />
                 </q-item-section>
@@ -117,7 +137,53 @@ const isAdmin = ref(false)
 const carrito = ref([])
 const celulares = ref([])
 const total = ref(0)
-const eliminarCarrito = async (id, precio) => {
+
+const decrementCantidad = async (id) => {
+  try {
+    const userRef = doc(db, "user", user.value.email);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+
+    const newCarrito = userData.carrito
+      .map(celular => {
+        if (celular.id === id) {
+          return { ...celular, cantidad: celular.cantidad - 1 };
+        }
+        return celular;
+      })
+      .filter(celular => celular.cantidad > 0); // Elimina celulares con cantidad <= 0
+
+    await updateDoc(userRef, { carrito: newCarrito });
+    fetchCarrito();
+  } catch (error) {
+    console.error('Error al decrementar la cantidad del celular:', error);
+  }
+};
+
+
+const incrementCantidad = async (id) => {
+  try {
+    const userRef = doc(db, "user", user.value.email);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+
+    const newCarrito = userData.carrito.map(celular => {
+      if (celular.id === id) {
+        return { ...celular, cantidad: celular.cantidad + 1 };
+      }
+      return celular;
+    });
+
+    await updateDoc(userRef, { carrito: newCarrito });
+    fetchCarrito();
+  } catch (error) {
+    console.error('Error al incrementar la cantidad del celular:', error);
+  }
+};
+
+
+
+/* const eliminarCarrito = async (id, precio) => {
   try {
     const userRef = doc(db, "user", user.value.email);
     const userSnap = await getDoc(userRef);
@@ -129,21 +195,21 @@ const eliminarCarrito = async (id, precio) => {
   } catch (error) {
     console.error('Error al eliminar el celular del carrito:', error);
   }
-}
+} */
 
 const fetchCelularesCarrito = async () => {
   try {
     let celularesArray = [];
     total.value = 0
-    for (const celularId of carrito.value) {
-      const docRef = doc(db, 'celulares', celularId);
+    for (const celular of carrito.value) {
+      const docRef = doc(db, 'celulares', celular.id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        celularesArray.push({ id: celularId, ...docSnap.data() });
-        total.value += Number(docSnap.data().precio)
+        celularesArray.push({ id: celular.id, cantidad: celular.cantidad , ...docSnap.data() });
+        total.value += Number(docSnap.data().precio) * celular.cantidad
       } else {
-        console.warn(`El documento con id ${celularId} no existe.`);
+        console.warn(`El documento con id ${celular.id} no existe.`);
       }
     }
     celulares.value = celularesArray;
@@ -169,7 +235,7 @@ const loginGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
     user.value = result.user;
     const docRef = doc(db, "user", user.value.email);
-    await setDoc(docRef, {carrito: []});
+    await setDoc(docRef, { carrito: [], favoritos: [] }, { merge: true });
     mostrar.value = false
   } catch (error) {
     console.error('Error al iniciar sesión con Google:', error);

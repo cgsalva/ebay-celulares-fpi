@@ -55,7 +55,6 @@ const filtrarCelulares = () => {
   // Si no hay filtros, mostramos todos los celulares
   if (Object.keys(Filtros.value).length === 0) {
     celularesFiltrados.value = celulares.value;
-    console.log('Celulares filtrados:', JSON.stringify(celularesFiltrados.value));
     return;
   }
 
@@ -63,9 +62,10 @@ const filtrarCelulares = () => {
     return Object.keys(Filtros.value).every(key => {
       if (!Filtros.value[key]) return true; // Si el filtro está vacío, no lo aplicamos
 
-      // Manejo especial para el filtro de precio
+      // Manejo especial para el rango de precio
       if (key === 'precio') {
-        return celular.precio <= Filtros.value[key]; // Comparación para precio igual o menor
+        const { min, max } = Filtros.value[key];
+        return celular.precio >= min && celular.precio <= max;
       }
 
       // Filtros generales para otros atributos
@@ -75,6 +75,7 @@ const filtrarCelulares = () => {
 
   console.log('Celulares filtrados:', JSON.stringify(celularesFiltrados.value));
 };
+
 
 // Función para obtener los celulares de la base de datos
 const fetchCelulares = async () => {
