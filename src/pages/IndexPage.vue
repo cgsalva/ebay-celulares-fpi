@@ -2,11 +2,11 @@
   <q-page class="q-pa-lg">
     <div class="row">
       <div class="col-12 col-md-3">
-        <q-expansion-item class="lt-md" expand-separator icon="filter_alt" label="Filter by">
+        <q-expansion-item class="lt-md text-grey-9" expand-separator icon="filter_alt" label="Filtrar por">
           <FiltrosCelulares @filtros="conseguirFiltros" @limpiar="limpiar"/>
         </q-expansion-item>
         <div class="gt-sm q-pa-lg">
-          <p><q-icon name="filter_alt" class="q-pl-md q-pr-lg text-h5" />Filter by</p>
+          <p class="text-grey-9"><q-icon name="filter_alt" class="q-pl-md q-pr-lg text-h5" />Filtrar por</p>
           <FiltrosCelulares @filtros="conseguirFiltros" @limpiar="limpiar"/>
         </div>
       </div>

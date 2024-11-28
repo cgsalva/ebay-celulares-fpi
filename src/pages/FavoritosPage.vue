@@ -2,7 +2,7 @@
   <q-page class="q-pa-lg">
     <div class="row">
       <div class="col-12">
-        <div class="text-h5 q-ml-lg text-weight-bold">Favoritos</div>
+        <div class="text-h5 text-center q-ml-lg text-weight-regular">Lista de favoritos</div>
       </div>
       <div class="col-12 q-mx-xl">
         <CardFavoritos  v-for="(celular, index) in celularesFavoritos" :key="index" :marca="celular.marca" @delete="eliminarFavorito(celular.id)"

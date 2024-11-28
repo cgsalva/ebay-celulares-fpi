@@ -73,6 +73,12 @@
         </div>
       </q-card>
 
+      <q-dialog v-model="alerta" position="top">
+      <q-card class="text-center q-py-md" style="width: 350px">
+        {{ mensajeAlerta }}
+      </q-card>
+    </q-dialog>
+
       <!--
       <div class="row">
         <div class="col-12">
@@ -101,6 +107,8 @@ defineOptions({
 });
 
 
+const alerta = ref(false)
+const mensajeAlerta = ref('')
 
 const slide = ref('frontal');
 const id = useRoute().params.ID; //obtenemos el id de la ruta
@@ -128,8 +136,11 @@ const agregarFavorito = async () => {
       }
 
       transaction.update(userRef, { favoritos });
-    });
 
+    });
+    mensajeAlerta.value = 'Se añadio a tu lista de favoritos'
+    alerta.value = true
+    
   } catch (error) {
     console.error("Error al agregar producto a favoritos:", error);
   }
@@ -165,6 +176,8 @@ const agregarCarrito = async () => {
     });
 
     emit("updateCarrito");
+    mensajeAlerta.value = 'Se añadio al carrito'
+    alerta.value = true
   } catch (error) {
     console.error("Error al agregar o actualizar producto en el carrito:", error);
   }

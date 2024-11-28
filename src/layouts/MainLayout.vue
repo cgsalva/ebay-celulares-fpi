@@ -4,18 +4,19 @@
 
       <q-toolbar>
 
-        <q-btn flat no-caps no-wrap to="/" class="q-ml-xs" v-if="$q.screen.gt.xs">
+        <q-btn flat no-caps no-wrap rounded to="/" class="q-ml-xs" v-if="$q.screen.gt.xs">
           <q-toolbar-title shrink class="text-weight-bold">
-            Smartphone Store
+            📱Smartphone Store
           </q-toolbar-title>
         </q-btn>
 
         <q-space />
 
         <div class="YL__toolbar-input-container row no-wrap sm">
+          <!--
           <q-input dense outlined square v-model="search" placeholder="Buscar dispositivo" class="bg-white col" />
           <q-btn class="YL__toolbar-input-btn" color="grey-3" text-color="grey-8" icon="search" unelevated />
-
+-->
         </div>
 
         <q-space />
@@ -73,7 +74,7 @@
             </q-list>
           </q-btn-dropdown>
 
-          <q-btn v-if="mostrar == true" @click="loginGoogle" color="primary" label="Iniciar Sesión" class="q-mx-md" />
+          <q-btn rounded outline color="grey-9" v-if="mostrar == true" @click="loginGoogle" label="Iniciar Sesión" class="q-mx-md" />
 
           <q-btn-dropdown v-if="mostrar == false" rounded flat>
             <template v-slot:label>

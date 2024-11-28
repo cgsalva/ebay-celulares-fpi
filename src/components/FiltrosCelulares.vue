@@ -9,18 +9,18 @@
         <label for="precio-rango">
           Precio: ${{ modelPrecio.min }} - ${{ modelPrecio.max }}
         </label>
-        <q-range id="precio-rango" v-model="modelPrecio" :min="0" :max="1500" color="primary"
+        <q-range id="precio-rango" dense v-model="modelPrecio" :min="0" :max="1500" color="grey-8"
           label="false" />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelMarca" :options="filtros.marcas" label="Marcas" borderless />
+        <q-select v-model="modelMarca" dense :options="filtros.marcas" label="Marca" color="grey-8" borderless />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelPantalla" :options="filtros.pantalla" label="Pantalla" borderless />
+        <q-select v-model="modelPantalla" dense :options="filtros.pantalla" label="Pantalla" color="grey-8" borderless />
       </q-item-section>
     </q-item>
     <!-- <q-item clickable v-ripple>
@@ -35,18 +35,18 @@
     </q-item> -->
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelAlmacenamiento" :options="filtros.almacenamiento" label="Almacenamiento Interno"
-          borderless />
+        <q-select v-model="modelAlmacenamiento" dense :options="filtros.almacenamiento" label="Almacenamiento Interno"
+          color="grey-8" borderless />
       </q-item-section>
     </q-item>
     <q-item clickable v-ripple>
       <q-item-section>
-        <q-select v-model="modelRam" :options="filtros.ram" label="Memoria RAM" />
+        <q-select v-model="modelRam" dense :options="filtros.ram" label="Memoria RAM" color="grey-8" borderless />
       </q-item-section>
     </q-item>
     <q-item>
       <q-item-section @click="limpiarFiltros">
-        <q-btn @click="$emit('limpiar', {})" label="Limpiar" color="primary" />
+        <q-btn @click="$emit('limpiar', {})" label="Limpiar" outline color="grey-8" />
       </q-item-section>
       <q-item-section>
         <q-btn @click="$emit('filtros', {
@@ -55,7 +55,7 @@
           pantalla: modelPantalla,
           almacenamiento: modelAlmacenamiento,
           ram: modelRam
-        })" label="Aplicar" color="primary" />
+        })" label="Aplicar" outline color="grey-8" />
       </q-item-section>
     </q-item>
   </q-list>
@@ -81,6 +81,7 @@ const limpiarFiltros = () => {
   modelMarca.value = ''
   modelPantalla.value = ''
   modelAlmacenamiento.value = ''
+  modelRam.value = ''
 }
 
 onMounted(//esta dentro de onMounted para que se ejecute cuando se monte el componente
